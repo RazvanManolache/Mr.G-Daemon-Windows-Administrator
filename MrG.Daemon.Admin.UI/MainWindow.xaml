@@ -1,0 +1,206 @@
+﻿<Window x:Class="MrG.Daemon.Manage.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MrG.Daemon.Manage"
+        xmlns:converters="clr-namespace:MrG.Daemon.Manage.Converters"
+        mc:Ignorable="d"
+        Title="Mr.G Daemon Manager"  >
+    <Window.DataContext>
+        <local:MainWindowVM/>
+    </Window.DataContext>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu  Grid.Row="0">
+                <MenuItem Header="Options" Margin="4"  Padding="4" BorderThickness="1" BorderBrush="Black">
+                    <MenuItem Header="Install">
+                            <MenuItem Header="Mr.G Comfy AI" Click="MenuInstallMrGAI_Click"/>
+                            <MenuItem Header="Comfy AI" Click="MenuInstallComfyAI_Click"/>
+                            <MenuItem Header="Automatic1111" Click="MenuInstallAutomatic1111_Click"/>
+                    </MenuItem>
+                <MenuItem Header="Configure" Click="MenuConfigure_Click"/>
+                    <MenuItem Header="Exit" Click="MenuExit_Click"/>
+                </MenuItem>
+            </Menu>
+
+        <Grid Grid.Row="1" Grid.Column="0" Background="LightPink" HorizontalAlignment="Stretch" x:Name="updateBar"  Visibility="{Binding UpdateVisible}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="Update is available"  VerticalAlignment="Center" />
+            <Button Grid.Column="1" Content="Update" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkGreen"  />
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Background="LightYellow" Visibility="{Binding PossibleConfigLocalIssue}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="System is configured for local access, but no service seems to be present. This is ok to happen if you chose to use this service to run manually, but if not there's either a problem with your install, so you should reinstall, or you want to connect to some remote machine." x:Name="notificationLocalBar" />
+            <Button Grid.Column="1" Content="Configure" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="MenuConfigure_Click"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Background="LightYellow" Visibility="{Binding PossibleConfigRemoteIssue}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="System is configured for remote access, but no service seems to be present. This is ok to happen if you chose to stop the service on that machine, but if not there's either a problem with your install, so you should reinstall, or you want to change configuration." x:Name="notificationRemoteBar" />
+            <Button Grid.Column="1" Content="Configure" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="MenuConfigure_Click"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Background="LightYellow" Visibility="{Binding PossibleConfigAccountIssue}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="System is configured for using an account, but it seems that daemon is not connected to the account." x:Name="notificationAccountBar" />
+            <Button Grid.Column="1" Content="Configure" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="MenuConfigure_Click"/>
+        </Grid>
+
+        <GroupBox  Grid.Row="3" Grid.Column="0" x:Name="daemonServiceManagement" BorderThickness="3" BorderBrush="DarkBlue" >
+                <GroupBox.Header>
+                    <Border BorderThickness="3" BorderBrush="DarkBlue"  Background="White"  HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <CheckBox Margin="5 0 0 0" Content="Daemon service management" IsChecked="True" Padding="2"  x:Name="showDaemonServiceManagementCheckbox" VerticalContentAlignment="Center"/>
+                            <TextBlock Margin="5 0 0 0"  Padding="10 0 10 0" FontWeight="Bold" Foreground="White" Text="{Binding DaemonLocation}" Background="Black" HorizontalAlignment="Center" VerticalAlignment="Stretch" TextAlignment="Center"/>
+                            <TextBlock Margin="0" Width="100" FontWeight="Bold" Foreground="White" Text="{Binding NotificationDaemonServiceStatusText}" Background="DarkBlue" HorizontalAlignment="Center" VerticalAlignment="Stretch" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </GroupBox.Header>
+                <StackPanel>
+                    <StackPanel.Visibility>
+                        <Binding ElementName="showDaemonServiceManagementCheckbox" Mode="OneWay" Path="IsChecked">
+                            <Binding.Converter>
+                                <converters:BoolToVisibilityConverter/>
+                            </Binding.Converter>
+                        </Binding>
+                    </StackPanel.Visibility>
+                    
+                    <TextBlock TextWrapping="Wrap" Text="Daemon service not found" x:Name="notificationDaemonServiceManagement" Background="LightYellow" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <Button Content="Start" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkGreen" Click="StartDaemon_Click" Visibility="{Binding StartServerVisible}" IsEnabled="{Binding StartServerEnabled}" />
+                    <Button Content="Stop" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="StopDaemon_Click" Visibility="{Binding StopServerVisible}" IsEnabled="{Binding StopServerEnabled}"/>
+                        <Button Content="Restart" Margin="8" Padding="3" Width="100" FontWeight="Bold" Click="RestartDaemon_Click" Visibility="{Binding RestartServerVisible}" IsEnabled="{Binding RestartServerEnabled}"/>
+                    </StackPanel>
+                <GroupBox>
+                    <GroupBox.Header>
+                        <CheckBox Content="Disk space" IsChecked="{Binding DiskVisible,Mode=TwoWay}"  />
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <StackPanel>
+
+                            <Label Content="No items available" HorizontalContentAlignment="Center" >
+                                <Label.Visibility>
+                                        <Binding Path="DiskInfo.Count" ConverterParameter="invert" >
+                                            <Binding.Converter>
+                                                <converters:NumberToVisibiltyConverter/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                </Label.Visibility>
+                            </Label>
+                            <ListView SelectionMode="Single" ItemsSource="{Binding DiskInfo}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <ListView.Visibility>
+                                    <Binding Path="DiskInfo.Count"  >
+                                        <Binding.Converter>
+                                            <converters:NumberToVisibiltyConverter/>
+                                        </Binding.Converter>
+                                    </Binding>
+                                </ListView.Visibility>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ListViewItem>
+                                            <local:DiskControl/>
+                                        </ListViewItem>
+                                    </DataTemplate>
+
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </GroupBox.Content>
+                </GroupBox>
+                <GroupBox>
+                        <GroupBox.Header>
+                            <CheckBox Content="Daemon log" IsChecked="{Binding LogVisible,Mode=TwoWay}"  x:Name="showLogCheckbox" />
+                        </GroupBox.Header>
+                        <GroupBox.Content>
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                                <Grid.Visibility>
+                                        <Binding Path="LogVisible">
+                                        <Binding.Converter>
+                                            <converters:BoolToVisibilityConverter/>
+                                        </Binding.Converter>
+                                    </Binding>
+                                </Grid.Visibility>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"  />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBox IsReadOnly="True" Text="{Binding LogBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+
+                                </TextBox>
+
+                            </Grid>
+
+                        </GroupBox.Content>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+
+                <ScrollViewer Grid.Row="4" Grid.Column="0" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Visible" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <StackPanel>
+                <Label Content="No applications available" HorizontalContentAlignment="Center">
+                    <Label.Visibility>
+                        <Binding Path="SubApplications.Count" ConverterParameter="invert" >
+                            <Binding.Converter>
+                                <converters:NumberToVisibiltyConverter/>
+                            </Binding.Converter>
+                        </Binding>
+                    </Label.Visibility>
+                </Label>
+                <ListView ItemsSource="{Binding SubApplications, Mode=TwoWay}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionMode="Single" >
+                    <ListView.Visibility>
+                        <Binding Path="SubApplications.Count" >
+                            <Binding.Converter>
+                                <converters:NumberToVisibiltyConverter/>
+                            </Binding.Converter>
+                        </Binding>
+                    </ListView.Visibility>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ListViewItem HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <StackPanel HorizontalAlignment="Stretch">
+                                    <local:SubApplicationControl EventSubApplication="SubApplicationControl_EventSubApplication"/>
+                            </StackPanel>
+                            </ListViewItem>
+                        </DataTemplate>
+                        
+                    </ListView.ItemTemplate>
+                </ListView>
+
+
+            </StackPanel>
+        </ScrollViewer>
+         
+            <!--<TextBlock Text="No applications instaled."  HorizontalAlignment="Stretch" TextAlignment="Center" >
+                <TextBlock.Visibility>
+                    <Binding Path="SubApplications" Mode="OneWay" Path="Visibility">
+                        <Binding.Converter>
+                            <converters:BoolToVisibilityConverter/>
+                        </Binding.Converter>
+                    </Binding>
+                </TextBlock.Visibility>
+            </TextBlock>-->
+      
+    </Grid>
+</Window>

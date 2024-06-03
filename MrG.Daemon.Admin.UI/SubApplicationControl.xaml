@@ -1,0 +1,271 @@
+﻿<UserControl x:Class="MrG.Daemon.Manage.SubApplicationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MrG.Daemon.Manage"
+             xmlns:data="clr-namespace:MrG.Daemon.Control.Data;assembly=MrG.Daemon.Control"
+             mc:Ignorable="d" 
+              xmlns:converters="clr-namespace:MrG.Daemon.Manage.Converters"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <!--<UserControl.DataContext>
+        <data:SubApplication/>
+    </UserControl.DataContext>-->
+   
+    <GroupBox BorderThickness="2" BorderBrush="DarkGreen" Margin="8" >
+        <GroupBox.Header>
+            <Border BorderThickness="3" BorderBrush="DarkGreen"  Background="White"  HorizontalAlignment="Stretch">
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox Margin="5 0 0 0" Content="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsChecked="{Binding ControlVisible,Mode=TwoWay}" Padding="2"  x:Name="showSubApplicationCheckbox" VerticalContentAlignment="Center"/>
+                    <TextBlock Margin="5 0 0 0" Width="100" FontWeight="Bold" Foreground="White" Text="{Binding Status, Mode=TwoWay}" Background="DarkBlue" HorizontalAlignment="Center" VerticalAlignment="Stretch" TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </GroupBox.Header>
+        <StackPanel >
+            <StackPanel.Visibility>
+                <Binding ElementName="showSubApplicationCheckbox" Mode="OneWay" Path="IsChecked">
+                    <Binding.Converter>
+                        <converters:BoolToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </StackPanel.Visibility>
+            <TextBlock TextWrapping="Wrap" Text="{Binding NotificationText}"  Background="LightYellow">
+                <TextBlock.Visibility>
+                    <Binding Path="NotificationVisible">
+                        <Binding.Converter>
+                            <converters:BoolToVisibilityConverter/>
+                        </Binding.Converter>
+                    </Binding>
+                </TextBlock.Visibility>
+            </TextBlock>
+            <StackPanel >
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Id" HorizontalAlignment="Center" />
+                    <TextBox Text="{Binding Id}" IsReadOnly="True" VerticalContentAlignment="Center" />
+                </StackPanel>
+                
+                <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"  >
+                    <Button Content="Start" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkGreen" Click="StartClick" IsEnabled="{Binding StartEnabled}" />
+                    <Button Content="Stop" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="StopClick" IsEnabled="{Binding RestartEnabled}"/>
+                    <Button Content="Restart" Margin="8" Padding="3" Width="100" FontWeight="Bold" Click="RestartClick" IsEnabled="{Binding StopEnabled}"/>
+                    <Button Content="Update" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkBlue" Click="UpdateClick" >
+                        <Button.Visibility>
+                            <Binding Source="HasUpdates" Mode="OneWay" >
+                                <Binding.Converter>
+                                    <converters:BoolToVisibilityConverter/>
+                                </Binding.Converter>
+                            </Binding>
+                        </Button.Visibility>
+                    </Button>
+                    <Button Content="Check for updates" Margin="8" Padding="3" Width="120" FontWeight="Bold" Foreground="DarkBlue" Click="CheckUpdateClick">
+                        <Button.Visibility>
+                            <Binding Path="HasUpdates" Mode="OneWay" ConverterParameter="true">
+                                <Binding.Converter>
+                                    <converters:BoolToVisibilityConverter />
+                                </Binding.Converter>
+                                
+                            </Binding>
+                        </Button.Visibility>
+                    </Button>
+                </StackPanel>
+                <GroupBox Height="Auto">
+                    <GroupBox.Header>
+                        <CheckBox Content="Settings" IsChecked="{Binding SettingsVisible,Mode=TwoWay}"  x:Name="showSettingsCheckbox" />
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <StackPanel>
+                            <StackPanel.Visibility>
+                                <Binding ElementName="showSettingsCheckbox" Mode="OneWay" Path="IsChecked">
+                                    <Binding.Converter>
+                                        <converters:BoolToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </StackPanel.Visibility>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"  />
+                                    <ColumnDefinition Width="4*"  />
+
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Content="Name" Grid.Row="0" Grid.Column="0"/>
+                                <TextBox Text="{Binding Name, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" />
+
+
+                                <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <GroupBox.Header>
+                                        <CheckBox Content="Run options" IsChecked="{Binding RunOptionsVisible,Mode=TwoWay}"  x:Name="showRunOptionsCheckbox" />
+                                    </GroupBox.Header>
+                                    <Grid HorizontalAlignment="Stretch" >
+                                        <Grid.Visibility>
+                                            <Binding ElementName="showRunOptionsCheckbox" Mode="OneWay" Path="IsChecked">
+                                                <Binding.Converter>
+                                                    <converters:BoolToVisibilityConverter/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Grid.Visibility>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="3*"  />
+
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <CheckBox Content="Auto start" Grid.Row="1" Grid.Column="0"  IsChecked="{Binding AutoStart,Mode=TwoWay}"/>
+                                        <CheckBox Content="Restart on critical error" Grid.Row="2" Grid.Column="0"  IsChecked="{Binding RestartOnCriticalError,Mode=TwoWay}" />
+                                        <Label Content="Critical error list (one per line)"  Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                                        <TextBox AcceptsReturn="True" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="{Binding CriticalErrorMessagesString,Mode=TwoWay}" />
+
+                                    </Grid>
+
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <GroupBox.Header>
+                                        <CheckBox Content="Command" IsChecked="{Binding CommandVisible,Mode=TwoWay}"  x:Name="showCommandCheckbox" />
+                                    </GroupBox.Header>
+
+                                    <Grid HorizontalAlignment="Stretch" >
+                                        <Grid.Visibility>
+                                            <Binding ElementName="showCommandCheckbox" Mode="OneWay" Path="IsChecked">
+                                                <Binding.Converter>
+                                                    <converters:BoolToVisibilityConverter/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Grid.Visibility>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="4*"  />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Content="Command Executable" Grid.Row="0" Grid.Column="0" />
+                                        <TextBox Text="{Binding CommandExec,Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center"/>
+                                        <Label Content="Command" Grid.Row="1" Grid.Column="0" />
+                                        <TextBox Text="{Binding Command,Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center"/>
+                                        <Label Content="Flags (one per line)" Grid.Row="2" Grid.Column="0" />
+                                        <TextBox Text="{Binding FlagsString,Mode=TwoWay}" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+
+                                    </Grid>
+
+                                </GroupBox>
+
+                                <GroupBox  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <GroupBox.Header>
+                                        <CheckBox Content="Source" IsChecked="{Binding SourceVisible,Mode=TwoWay}"  x:Name="showSourceCheckbox" />
+                                    </GroupBox.Header>
+                                    <Grid HorizontalAlignment="Stretch" >
+                                        <Grid.Visibility>
+                                            <Binding ElementName="showSourceCheckbox" Mode="OneWay" Path="IsChecked">
+                                                <Binding.Converter>
+                                                    <converters:BoolToVisibilityConverter/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Grid.Visibility>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="*"  />
+                                            <ColumnDefinition Width="*"  />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Content="Repo url" Grid.Row="0" Grid.Column="0"/>
+                                        <TextBox Text="{Binding RepoURL, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center"/>
+                                        <Label Content="Branch" Grid.Row="1" Grid.Column="0"/>
+                                        <TextBox Text="{Binding Branch, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                        <Label Content="Path" Grid.Row="1" Grid.Column="2"/>
+                                        <TextBox Text="{Binding Path, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" VerticalContentAlignment="Center"/>
+                                        <CheckBox Content="Auto update"  IsChecked="{Binding AutoUpdate, Mode=TwoWay}" Grid.Row="1" Grid.Column="4"   HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+
+                                    </Grid>
+
+                                </GroupBox>
+
+
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+
+                                <Button Content="Save" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkGreen" Click="SaveClick"/>
+                                <Button Content="Revert changes" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="RevertChanges"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox.Content>
+                </GroupBox>
+                <GroupBox>
+                    <GroupBox.Header>
+                        <CheckBox Content="Application log" IsChecked="{Binding LogVisible,Mode=TwoWay}"  x:Name="showLogCheckbox" />
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                            <Grid.Visibility>
+                                <Binding ElementName="showLogCheckbox" Mode="OneWay" Path="IsChecked">
+                                    <Binding.Converter>
+                                        <converters:BoolToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </Grid.Visibility>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"  />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBox IsReadOnly="True" Text="{Binding LogBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+
+                            </TextBox>
+
+                        </Grid>
+
+                    </GroupBox.Content>
+                </GroupBox>
+                <GroupBox>
+                    <GroupBox.Header>
+                        <CheckBox Content="Application error output" IsChecked="{Binding ConsoleVisible,Mode=TwoWay}"  x:Name="showConsoleCheckbox" />
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                            <Grid.Visibility>
+                                <Binding ElementName="showConsoleCheckbox" Mode="OneWay" Path="IsChecked">
+                                    <Binding.Converter>
+                                        <converters:BoolToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </Grid.Visibility>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"  />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBox IsReadOnly="True" Text="{Binding ConsoleBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+                               
+                            </TextBox>
+
+                        </Grid>
+
+                    </GroupBox.Content>
+                </GroupBox>
+            </StackPanel>
+        </StackPanel>
+    </GroupBox>
+</UserControl>

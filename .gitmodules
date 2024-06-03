@@ -1,0 +1,3 @@
+[submodule "MrG.Daemon.Admin"]
+	path = MrG.Daemon.Admin
+	url = https://github.com/RazvanManolache/Mr.G-Daemon-Admin-.Net-Library
