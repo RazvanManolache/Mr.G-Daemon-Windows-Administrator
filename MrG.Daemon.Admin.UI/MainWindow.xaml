@@ -20,11 +20,7 @@
         </Grid.RowDefinitions>
         <Menu  Grid.Row="0">
                 <MenuItem Header="Options" Margin="4"  Padding="4" BorderThickness="1" BorderBrush="Black">
-                    <MenuItem Header="Install">
-                            <MenuItem Header="Mr.G Comfy AI" Click="MenuInstallMrGAI_Click"/>
-                            <MenuItem Header="Comfy AI" Click="MenuInstallComfyAI_Click"/>
-                            <MenuItem Header="Automatic1111" Click="MenuInstallAutomatic1111_Click"/>
-                    </MenuItem>
+                <MenuItem Header="Install" x:Name="InstallMenuItem" Visibility="Hidden"/>
                 <MenuItem Header="Configure" Click="MenuConfigure_Click"/>
                     <MenuItem Header="Exit" Click="MenuExit_Click"/>
                 </MenuItem>

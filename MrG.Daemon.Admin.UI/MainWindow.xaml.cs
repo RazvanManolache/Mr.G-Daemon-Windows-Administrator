@@ -33,15 +33,15 @@ namespace MrG.Daemon.Manage
             Startup();
              _notifyIcon = new NotifyIcon
             {
-                Icon = new Icon("AppIcon.ico"), // Path to your .ico file
+                Icon = new Icon("AppIcon.ico"), 
                 Visible = true,
-                Text = "Your App Name"
+                Text = "Mr.G Daemon administrator"
             };
 
             // Create context menu
             var contextMenu = new ContextMenuStrip();
             var showMenu = contextMenu.Items.Add("Show");
-            var hideMenu = contextMenu.Items.Add("Hides");
+            var hideMenu = contextMenu.Items.Add("Hide");
             var exitMenu = contextMenu.Items.Add("Exit");
             showMenu.Click += ShowMenu_Click;
             hideMenu.Click += HideMenu_Click;
@@ -122,9 +122,42 @@ namespace MrG.Daemon.Manage
             DaemonServerManager.SubApplicationsEvent += DaemonServerManager_SubApplicationEvent;
             DaemonServerManager.ConsoleEvent += DaemonServerManager_ConsoleEvent;
             DaemonServerManager.LogEvent += DaemonServerManager_LogEvent;
+            DaemonServerManager.KitsEvent += DaemonServerManager_KitsEvent;
 
             DaemonServerManager.WebServerEvent += DaemonServerManager_WebServerEvent;
             DaemonServerManager.Start();
+        }
+
+        private void DaemonServerManager_KitsEvent(object? sender, List<SubApplication>? e)
+        {
+            if(e!=null && e.Count > 0)
+            {
+                InstallMenuItem.Items.Clear();
+                InstallMenuItem.Visibility = Visibility.Visible;
+                foreach(var app in e)
+                {
+                    if (ViewModel.SubApplications.Where(a => a.Id == app.Id).Any())
+                        continue;
+                    var item = new MenuItem();
+                    item.Header = app.Name;
+                    item.Click += (s, e) =>
+                    {
+                        DaemonServerManager.SendMessage(new BaseRequest()
+                        {
+                            Request = RequestTypeEnum.AppInstall,
+                            App = app,
+                            
+                        });
+                    };
+                    InstallMenuItem.Items.Add(item);
+                    
+                }
+
+            }
+            else
+            {
+                InstallMenuItem.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void DaemonServerManager_LogEvent(object? sender, LogEvent? e)

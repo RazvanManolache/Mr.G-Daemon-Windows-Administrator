@@ -186,6 +186,7 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <Label Content="Repo url" Grid.Row="0" Grid.Column="0"/>
                                         <TextBox Text="{Binding RepoURL, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center"/>
@@ -194,7 +195,8 @@
                                         <Label Content="Path" Grid.Row="1" Grid.Column="2"/>
                                         <TextBox Text="{Binding Path, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" VerticalContentAlignment="Center"/>
                                         <CheckBox Content="Auto update"  IsChecked="{Binding AutoUpdate, Mode=TwoWay}" Grid.Row="1" Grid.Column="4"   HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-
+                                        <Label Content="Setup command" Grid.Row="2" Grid.Column="0"/>
+                                        <TextBox Text="{Binding SetupCommand, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center"/>
                                     </Grid>
 
                                 </GroupBox>
