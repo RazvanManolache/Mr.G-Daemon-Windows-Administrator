@@ -18,4 +18,10 @@
     <ProjectReference Include="..\MrG.Daemon.Admin\MrG.Daemon.Admin.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="mrg.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

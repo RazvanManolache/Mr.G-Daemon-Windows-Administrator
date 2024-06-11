@@ -22,7 +22,7 @@
                 <MenuItem Header="Options" Margin="4"  Padding="4" BorderThickness="1" BorderBrush="Black">
                 <MenuItem Header="Install" x:Name="InstallMenuItem" Visibility="Hidden"/>
                 <MenuItem Header="Configure" Click="MenuConfigure_Click"/>
-                    <MenuItem Header="Exit" Click="MenuExit_Click"/>
+                <MenuItem Header="Exit" Click="MenuExit_Click"/>
                 </MenuItem>
             </Menu>
 

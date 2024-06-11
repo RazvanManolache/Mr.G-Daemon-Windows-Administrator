@@ -68,6 +68,7 @@
                             </Binding>
                         </Button.Visibility>
                     </Button>
+                    <Button Content="Uninstall" Margin="8" Padding="3" Width="100" FontWeight="Bold" Click="UninstallClick" />
                 </StackPanel>
                 <GroupBox Height="Auto">
                     <GroupBox.Header>
@@ -241,7 +242,7 @@
                 </GroupBox>
                 <GroupBox>
                     <GroupBox.Header>
-                        <CheckBox Content="Application error output" IsChecked="{Binding ConsoleVisible,Mode=TwoWay}"  x:Name="showConsoleCheckbox" />
+                        <CheckBox Content="Application console output" IsChecked="{Binding ConsoleVisible,Mode=TwoWay}"  x:Name="showConsoleCheckbox" />
                     </GroupBox.Header>
                     <GroupBox.Content>
                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >

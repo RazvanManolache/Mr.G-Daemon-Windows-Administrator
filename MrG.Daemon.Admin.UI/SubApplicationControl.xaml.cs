@@ -30,7 +30,7 @@ namespace MrG.Daemon.Manage
             InitializeComponent();
         }
 
-        private void ThrowEvents(RequestTypeEnum ev)
+        private void SendRequest(RequestTypeEnum ev)
         {
             EventSubApplication?.Invoke(this, new BaseRequest()
             {
@@ -41,38 +41,46 @@ namespace MrG.Daemon.Manage
 
         private void StartClick(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppStart);
+            SendRequest(RequestTypeEnum.AppStart);
 
         }
 
         private void RestartClick(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppRestart);
+            SendRequest(RequestTypeEnum.AppRestart);
         }
 
         private void StopClick(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppStop);
+            SendRequest(RequestTypeEnum.AppStop);
         }
 
         private void UpdateClick(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppUpdate);
+            SendRequest(RequestTypeEnum.AppUpdate);
         }
 
         private void RevertChanges(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppList);
+            SendRequest(RequestTypeEnum.AppList);
         }
 
         private void SaveClick(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppConfig);
+            SendRequest(RequestTypeEnum.AppConfig);
         }
 
         private void CheckUpdateClick(object sender, RoutedEventArgs e)
         {
-            ThrowEvents(RequestTypeEnum.AppCheckUpdate);
+            SendRequest(RequestTypeEnum.AppCheckUpdate);
+        }
+
+        private void UninstallClick(object sender, RoutedEventArgs e)
+        {
+            if (System.Windows.MessageBox.Show("Are you sure you want to uninstall this application?", "Uninstall Application", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                SendRequest(RequestTypeEnum.AppUninstall);
+            }
         }
     }
 }

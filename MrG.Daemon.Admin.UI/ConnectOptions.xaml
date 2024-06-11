@@ -4,28 +4,58 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MrG.Daemon.Admin.UI"
+        xmlns:converters="clr-namespace:MrG.Daemon.Manage.Converters"
         mc:Ignorable="d"
-        Title="ConnectOptions" Height="Auto" Width="300">
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
+        Title="ConnectOptions" Width="300" Height="240">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
             <Label Content="Connection type:"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <RadioButton x:Name="LocalServer" Content="Local server" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="True"/>
-            <RadioButton x:Name="RemoteServer" Content="Remote server" HorizontalAlignment="Left"  VerticalAlignment="Center"/>
+            <RadioButton x:Name="LocalServer" Content="Local server" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="True" Checked="LocalChecked"/>
+            <RadioButton x:Name="RemoteServer" Content="Remote server" HorizontalAlignment="Left"  VerticalAlignment="Center" Checked="RemoteChecked"/>
         </StackPanel>
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" >
+            <Grid.Visibility>
+                <Binding ElementName="RemoteServer" Path="IsChecked">
+                    <Binding.Converter>
+                        <converters:BoolToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+
+            </Grid.RowDefinitions>
+            
+            <Label Content="Server:" Margin="10,0,0,0" Grid.Row="0" Grid.Column="0"/>
+            <TextBox Margin="10,0,0,0" Grid.Row="0" Grid.Column="1" x:Name="IpTextBox" TextChanged="IpTextBox_TextChanged"/>
+            <Button Content="Scan"  Grid.Row="0" Grid.Column="2" Padding="5" Margin="10,0" Click="Scan_Click" x:Name="ScanButton"/>
+            <ProgressBar x:Name="ScanProgressBar" Grid.Row="1" Grid.ColumnSpan="3" Visibility="Collapsed" Height="10" Margin="10"/>
+            <Label Visibility="Collapsed" Content="Server is not valid" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" Foreground="Red" x:Name="serverInvalid"/>
+            <Label Visibility="Collapsed" Content="No server found" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" Foreground="Red" x:Name="noServerFound"/>
+            <Button Content="Test connection"  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Padding="5" Margin="10" Click="Test_Click" x:Name="TestButton"/>
+        </Grid>
         
-        <StackPanel >
-            
-            <StackPanel Height="Auto" Orientation="Horizontal">
-                <Label Content="Server:" Margin="10,0,0,0" />
-                <TextBox Margin="10,0,0,0" Width="200"/>
-            </StackPanel>
-            <Button Content="Test connection" Margin="10" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="OK" Padding="5" Margin="10"/>
-            <Button Content="Cancel" Padding="5" Margin="10"/>
-            
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"  Height="Auto" Grid.Row="2">
+            <Button Content="OK" Padding="5" Margin="10" Click="OK_Click" x:Name="OKButton"/>
+            <Button Content="Cancel" Padding="5" Margin="10" Click="Cancel_Click"/>
+
         </StackPanel>
 
-    </StackPanel>
+    </Grid>
+    
 </Window>

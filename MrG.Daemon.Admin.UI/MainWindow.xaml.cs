@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using MrG.Daemon.Admin.UI;
 
 namespace MrG.Daemon.Manage
 {
@@ -33,7 +34,7 @@ namespace MrG.Daemon.Manage
             Startup();
              _notifyIcon = new NotifyIcon
             {
-                Icon = new Icon("AppIcon.ico"), 
+                Icon = new Icon("mrg.ico"), 
                 Visible = true,
                 Text = "Mr.G Daemon administrator"
             };
@@ -94,13 +95,15 @@ namespace MrG.Daemon.Manage
             
         }
 
+        const string configFile = "config.json";
+
         public void Startup()
         {
             // read config from file
-            var file = "config.json";
-            if (System.IO.File.Exists(file))
+            
+            if (System.IO.File.Exists(configFile))
             {
-                var config = System.IO.File.ReadAllText(file);
+                var config = System.IO.File.ReadAllText(configFile);
                 ViewModel.RemoteServerConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<RemoteServerConfig>(config);
             }
             else
@@ -108,7 +111,7 @@ namespace MrG.Daemon.Manage
                 ViewModel.RemoteServerConfig = new RemoteServerConfig();
 
 
-                System.IO.File.WriteAllText(file, Newtonsoft.Json.JsonConvert.SerializeObject(ViewModel.RemoteServerConfig));
+                System.IO.File.WriteAllText(configFile, Newtonsoft.Json.JsonConvert.SerializeObject(ViewModel.RemoteServerConfig));
             }
 
 
@@ -126,6 +129,28 @@ namespace MrG.Daemon.Manage
 
             DaemonServerManager.WebServerEvent += DaemonServerManager_WebServerEvent;
             DaemonServerManager.Start();
+           
+            GC.Collect();
+            
+        }
+
+        private void ConnectOptions_ConfigChanged(object? sender, RemoteServerConfig e)
+        {
+            System.IO.File.WriteAllText(configFile, Newtonsoft.Json.JsonConvert.SerializeObject(e));
+            DaemonServerManager.Stop();
+            DaemonServerManager.DiskInfoEvent -= DaemonServerManager_DiskInfoEvent;
+            DaemonServerManager.ConfigEvent -= DaemonServerManager_ConfigEvent;
+            DaemonServerManager.FlagsEvent -= DaemonServerManager_FlagsEvent;
+            DaemonServerManager.StatusesEvent -= DaemonServerManager_StatusesEvent;
+            DaemonServerManager.SubApplicationsEvent -= DaemonServerManager_SubApplicationEvent;
+            DaemonServerManager.ConsoleEvent -= DaemonServerManager_ConsoleEvent;
+            DaemonServerManager.LogEvent -= DaemonServerManager_LogEvent;
+            DaemonServerManager.KitsEvent -= DaemonServerManager_KitsEvent;
+            DaemonServerManager.WebServerEvent -= DaemonServerManager_WebServerEvent;
+            this.ViewModel.DiskInfo.Clear();
+            this.ViewModel.SubApplications.Clear();
+            this.ViewModel.LogBuffer.Clear();
+            Startup();
         }
 
         private void DaemonServerManager_KitsEvent(object? sender, List<SubApplication>? e)
@@ -133,7 +158,7 @@ namespace MrG.Daemon.Manage
             if(e!=null && e.Count > 0)
             {
                 InstallMenuItem.Items.Clear();
-                InstallMenuItem.Visibility = Visibility.Visible;
+                
                 foreach(var app in e)
                 {
                     if (ViewModel.SubApplications.Where(a => a.Id == app.Id).Any())
@@ -144,20 +169,33 @@ namespace MrG.Daemon.Manage
                     {
                         DaemonServerManager.SendMessage(new BaseRequest()
                         {
-                            Request = RequestTypeEnum.AppInstall,
+                            Request = RequestTypeEnum.AppAdd,
                             App = app,
-                            
                         });
+                        InstallMenuItem.Items.Remove(item);
+                        if (InstallMenuItem.Items.Count == 0)
+                        {
+                            InstallMenuItem.Dispatcher.BeginInvoke(() => InstallMenuItem.Visibility=Visibility.Collapsed);
+
+                        }
+
                     };
                     InstallMenuItem.Items.Add(item);
                     
                 }
 
             }
+            if(InstallMenuItem.Items.Count>0)
+            {
+                InstallMenuItem.Visibility = Visibility.Visible;
+            }
             else
             {
                 InstallMenuItem.Visibility = Visibility.Collapsed;
             }
+                
+            
+
         }
 
         private void DaemonServerManager_LogEvent(object? sender, LogEvent? e)
@@ -256,6 +294,12 @@ namespace MrG.Daemon.Manage
                         ViewModel.SubApplications.Add(subApplication);
                     }
                 }
+            }
+            //remove any that are no longer in the list
+            var toRemove = ViewModel.SubApplications.Where(a => !subApplications.Select(b => b.Id).Contains(a.Id)).ToList();
+            foreach(var remove in toRemove)
+            {
+                ViewModel.SubApplications.Remove(remove);
             }
             
         }
@@ -399,9 +443,18 @@ namespace MrG.Daemon.Manage
 
         }
 
+        private void ShowConfigure()
+        {
+            ConnectOptions connectOptions = new ConnectOptions();
+            connectOptions.ConfigChanged += ConnectOptions_ConfigChanged;
+            connectOptions.ShowDialog();
+        }
+
+       
+
         private void MenuConfigure_Click(object sender, RoutedEventArgs e)
         {
-
+            ShowConfigure();
         }
     }
 }
