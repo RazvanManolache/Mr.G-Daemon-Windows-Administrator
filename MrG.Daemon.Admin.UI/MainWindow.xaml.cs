@@ -336,13 +336,13 @@ namespace MrG.Daemon.Manage
 
         private void DaemonServerManager_WebServerEvent(object? sender, WebServerEvent e)
         {
-            if (ViewModel.WebConnected == false && e.Connected)
-            {
-                DaemonServerManager.SendMessage(new BaseRequest()
-                {
-                    Request = RequestTypeEnum.Status
-                });
-            }
+            //if (ViewModel.WebConnected == false && e.Connected)
+            //{
+            //    DaemonServerManager.SendMessage(new BaseRequest()
+            //    {
+            //        Request = RequestTypeEnum.Status
+            //    });
+            //}
             if(ViewModel.WebConnected != e.Connected)
             {
                 ViewModel.WebConnected = e.Connected;

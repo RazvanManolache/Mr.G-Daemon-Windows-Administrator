@@ -15,7 +15,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Menu  Grid.Row="0">
@@ -58,8 +57,9 @@
             <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="System is configured for using an account, but it seems that daemon is not connected to the account." x:Name="notificationAccountBar" />
             <Button Grid.Column="1" Content="Configure" Margin="8" Padding="3" Width="100" FontWeight="Bold" Foreground="DarkRed" Click="MenuConfigure_Click"/>
         </Grid>
-
-        <GroupBox  Grid.Row="3" Grid.Column="0" x:Name="daemonServiceManagement" BorderThickness="3" BorderBrush="DarkBlue" >
+        <ScrollViewer Grid.Row="3" Grid.Column="0" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Visible" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <StackPanel>
+                <GroupBox   x:Name="daemonServiceManagement" BorderThickness="3" BorderBrush="DarkBlue" >
                 <GroupBox.Header>
                     <Border BorderThickness="3" BorderBrush="DarkBlue"  Background="White"  HorizontalAlignment="Stretch">
 
@@ -91,7 +91,13 @@
                     </GroupBox.Header>
                     <GroupBox.Content>
                         <StackPanel>
-
+                            <StackPanel.Visibility>
+                                <Binding Path="DiskVisible">
+                                    <Binding.Converter>
+                                        <converters:BoolToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </StackPanel.Visibility>
                             <Label Content="No items available" HorizontalContentAlignment="Center" >
                                 <Label.Visibility>
                                         <Binding Path="DiskInfo.Count" ConverterParameter="invert" >
@@ -141,7 +147,7 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <TextBox IsReadOnly="True" Text="{Binding LogBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+                            <TextBox  TextWrapping="Wrap" IsReadOnly="True" Text="{Binding LogBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
 
                                 </TextBox>
 
@@ -153,8 +159,7 @@
             </GroupBox>
 
 
-                <ScrollViewer Grid.Row="4" Grid.Column="0" HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Visible" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <StackPanel>
+            
                 <Label Content="No applications available" HorizontalContentAlignment="Center">
                     <Label.Visibility>
                         <Binding Path="SubApplications.Count" ConverterParameter="invert" >

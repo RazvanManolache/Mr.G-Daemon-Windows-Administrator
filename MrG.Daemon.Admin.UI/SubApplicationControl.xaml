@@ -232,7 +232,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBox IsReadOnly="True" Text="{Binding LogBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+                            <TextBox IsReadOnly="True"  TextWrapping="Wrap" Text="{Binding LogBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
 
                             </TextBox>
 
@@ -260,7 +260,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBox IsReadOnly="True" Text="{Binding ConsoleBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
+                            <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{Binding ConsoleBuffer.CurrentContent, Mode=OneWay}" Height="200" Grid.Row="0" Grid.Column="0" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"  VerticalScrollBarVisibility="Visible">
                                
                             </TextBox>
 
