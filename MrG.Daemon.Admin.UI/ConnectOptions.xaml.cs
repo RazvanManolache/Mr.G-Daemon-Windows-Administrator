@@ -1,4 +1,4 @@
-﻿using MrG.Daemon.Control.Data;
+using MrG.Daemon.Control.Data;
 using MrG.Daemon.Control.Events;
 using MrG.Daemon.Control.Managers;
 using System;
@@ -175,7 +175,7 @@ namespace MrG.Daemon.Admin.UI
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             
-            RemoteServerConfig config = null;
+            RemoteServerConfig? config = null;
             var localserver = LocalServer.IsChecked;
             if (localserver == true)
             {
@@ -207,7 +207,7 @@ namespace MrG.Daemon.Admin.UI
         {
             this.serverInvalid.Visibility = Visibility.Collapsed;
             //check if the ip is valid
-            if (IPAddress.TryParse(IpTextBox.Text, out IPAddress address))
+            if (IPAddress.TryParse(IpTextBox.Text, out var address))
             {
                 OKButton.IsEnabled = false;
                 TestButton.IsEnabled = true;

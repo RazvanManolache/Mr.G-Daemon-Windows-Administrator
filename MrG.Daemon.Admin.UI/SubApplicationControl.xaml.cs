@@ -1,4 +1,4 @@
-﻿using MrG.Daemon.Control.Communication;
+using MrG.Daemon.Control.Communication;
 using MrG.Daemon.Control.Data;
 using MrG.Daemon.Control.Enums;
 using System;
@@ -23,7 +23,7 @@ namespace MrG.Daemon.Manage
     /// </summary>
     public partial class SubApplicationControl : System.Windows.Controls.UserControl
     {
-        public event EventHandler<BaseRequest> EventSubApplication;
+        public event EventHandler<BaseRequest>? EventSubApplication;
 
         public SubApplicationControl()
         {

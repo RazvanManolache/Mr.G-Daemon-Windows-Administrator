@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MrG.Daemon.Control.Data;
 using MrG.Daemon.Control.Events;
 using System;
@@ -12,18 +12,18 @@ using System.Windows;
 
 namespace MrG.Daemon.Manage
 {
-    public class MainWindowVM: ViewModelBase
+    public class MainWindowVM: ObservableObject
     {
         private RemoteServerConfig? remoteServerConfig;
         public RemoteServerConfig? RemoteServerConfig
         {
             get { return remoteServerConfig; }
             set { 
-                Set(ref remoteServerConfig, value); 
-                RaisePropertyChanged(nameof(PossibleConfigLocalIssue));
-                RaisePropertyChanged(nameof(PossibleConfigRemoteIssue));
-                RaisePropertyChanged(nameof(PossibleConfigAccountIssue));
-                RaisePropertyChanged(nameof(DaemonLocation));
+                SetProperty(ref remoteServerConfig, value); 
+                OnPropertyChanged(nameof(PossibleConfigLocalIssue));
+                OnPropertyChanged(nameof(PossibleConfigRemoteIssue));
+                OnPropertyChanged(nameof(PossibleConfigAccountIssue));
+                OnPropertyChanged(nameof(DaemonLocation));
 
             }
         }
@@ -32,7 +32,7 @@ namespace MrG.Daemon.Manage
         public bool HasUpdate
         {
             get { return hasUpdate; }
-            set { Set(ref hasUpdate, value); }
+            set { SetProperty(ref hasUpdate, value); }
         }
 
         public Visibility UpdateVisible
@@ -155,17 +155,17 @@ namespace MrG.Daemon.Manage
             set
             {
                 _isLocalDaemon = value;
-                RaisePropertyChanged(nameof(DaemonLocation));
-                RaisePropertyChanged(nameof(NotificationDaemonServiceStatusText));
-                RaisePropertyChanged(nameof(StartServerVisible));
-                RaisePropertyChanged(nameof(StopServerVisible));
-                RaisePropertyChanged(nameof(RestartServerVisible));
-                RaisePropertyChanged(nameof(StartServerEnabled));
-                RaisePropertyChanged(nameof(StopServerEnabled));
-                RaisePropertyChanged(nameof(RestartServerEnabled));
-                RaisePropertyChanged(nameof(PossibleConfigLocalIssue));
-                RaisePropertyChanged(nameof(PossibleConfigRemoteIssue));
-                RaisePropertyChanged(nameof(PossibleConfigAccountIssue));
+                OnPropertyChanged(nameof(DaemonLocation));
+                OnPropertyChanged(nameof(NotificationDaemonServiceStatusText));
+                OnPropertyChanged(nameof(StartServerVisible));
+                OnPropertyChanged(nameof(StopServerVisible));
+                OnPropertyChanged(nameof(RestartServerVisible));
+                OnPropertyChanged(nameof(StartServerEnabled));
+                OnPropertyChanged(nameof(StopServerEnabled));
+                OnPropertyChanged(nameof(RestartServerEnabled));
+                OnPropertyChanged(nameof(PossibleConfigLocalIssue));
+                OnPropertyChanged(nameof(PossibleConfigRemoteIssue));
+                OnPropertyChanged(nameof(PossibleConfigAccountIssue));
                 
 
 
@@ -307,20 +307,20 @@ public ServiceControllerStatus NotificationDaemonServiceStatus { get; set; }
         {
             get { return webConnected; }
             set { 
-                Set(ref webConnected, value);
-                RaisePropertyChanged(nameof(NotificationDaemonServiceMessage));
-                RaisePropertyChanged(nameof(NotificationDaemonServiceVisible));
-                RaisePropertyChanged(nameof(StartServerVisible));
-                RaisePropertyChanged(nameof(StopServerVisible));
-                RaisePropertyChanged(nameof(RestartServerVisible));
-                RaisePropertyChanged(nameof(StartServerEnabled));
-                RaisePropertyChanged(nameof(StopServerEnabled));
-                RaisePropertyChanged(nameof(RestartServerEnabled));
-                RaisePropertyChanged(nameof(NotificationDaemonServiceStatusText));
-                RaisePropertyChanged(nameof(NotificationDaemonServiceWebStatus));
-                RaisePropertyChanged(nameof(PossibleConfigLocalIssue));
-                RaisePropertyChanged(nameof(PossibleConfigRemoteIssue));
-                RaisePropertyChanged(nameof(PossibleConfigAccountIssue));
+                SetProperty(ref webConnected, value);
+                OnPropertyChanged(nameof(NotificationDaemonServiceMessage));
+                OnPropertyChanged(nameof(NotificationDaemonServiceVisible));
+                OnPropertyChanged(nameof(StartServerVisible));
+                OnPropertyChanged(nameof(StopServerVisible));
+                OnPropertyChanged(nameof(RestartServerVisible));
+                OnPropertyChanged(nameof(StartServerEnabled));
+                OnPropertyChanged(nameof(StopServerEnabled));
+                OnPropertyChanged(nameof(RestartServerEnabled));
+                OnPropertyChanged(nameof(NotificationDaemonServiceStatusText));
+                OnPropertyChanged(nameof(NotificationDaemonServiceWebStatus));
+                OnPropertyChanged(nameof(PossibleConfigLocalIssue));
+                OnPropertyChanged(nameof(PossibleConfigRemoteIssue));
+                OnPropertyChanged(nameof(PossibleConfigAccountIssue));
             }
 
         }
@@ -328,6 +328,6 @@ public ServiceControllerStatus NotificationDaemonServiceStatus { get; set; }
 
         private bool logVisible;
 
-        public bool LogVisible { get => logVisible; set => Set(ref logVisible, value); }
+        public bool LogVisible { get => logVisible; set => SetProperty(ref logVisible, value); }
     }
 }

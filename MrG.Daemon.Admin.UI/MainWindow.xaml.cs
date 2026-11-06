@@ -1,9 +1,10 @@
-﻿using MrG.Daemon.Control.Communication;
+using MrG.Daemon.Control.Communication;
 using MrG.Daemon.Control.Data;
 using MrG.Daemon.Control.Enums;
 using MrG.Daemon.Control.Events;
 using MrG.Daemon.Control.Managers;
 using System.ServiceProcess;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -97,6 +98,7 @@ namespace MrG.Daemon.Manage
 
         const string configFile = "config.json";
 
+        [MemberNotNull(nameof(DaemonServerManager))]
         public void Startup()
         {
             // read config from file
@@ -104,7 +106,7 @@ namespace MrG.Daemon.Manage
             if (System.IO.File.Exists(configFile))
             {
                 var config = System.IO.File.ReadAllText(configFile);
-                ViewModel.RemoteServerConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<RemoteServerConfig>(config);
+                ViewModel.RemoteServerConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<RemoteServerConfig>(config) ?? new RemoteServerConfig();
             }
             else
             {
@@ -116,7 +118,7 @@ namespace MrG.Daemon.Manage
 
 
             DaemonServiceManager.ServiceStatusChanged += LocalServerHelper_ServiceStatusChanged;
-            DaemonServerManager = new DaemonServerManager(ViewModel.RemoteServerConfig);
+            DaemonServerManager = new DaemonServerManager(ViewModel.RemoteServerConfig ?? new RemoteServerConfig());
 
             DaemonServerManager.DiskInfoEvent += DaemonServerManager_DiskInfoEvent;
             DaemonServerManager.ConfigEvent += DaemonServerManager_ConfigEvent;
@@ -312,6 +314,7 @@ namespace MrG.Daemon.Manage
 
         private void DaemonServerManager_StatusesEvent(object? sender, List<SubAppStatus>? e)
         {
+            if (e is null) return;
             foreach(var status in e)
             {
                 var existing = ViewModel.SubApplications.Where(a => a.Id == status.Id).FirstOrDefault();
